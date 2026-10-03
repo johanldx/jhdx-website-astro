@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "jhdx-website-astro",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -13,7 +13,8 @@
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
     "format": "biome format --write .",
-    "check": "biome check ."
+    "check": "biome check .",
+    "generate:og": "node scripts/generate-og.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.0.2",
