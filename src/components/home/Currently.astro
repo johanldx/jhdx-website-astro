@@ -1,0 +1,35 @@
+---
+import { currentExperience } from '../../data/experience';
+import type { Lang } from '../../data/site';
+import ExperienceItem from './ExperienceItem.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const understatedExperience = currentExperience.filter(
+  (item) => item.company !== 'Rootage',
+);
+---
+
+<section class="section" aria-labelledby="currently-title">
+  <SectionHeader id="currently-title" title={lang === 'fr' ? 'En ce moment' : 'Currently'} />
+  {understatedExperience.map((item) => (
+    <ExperienceItem
+      role={item.role[lang]}
+      company={item.company}
+      start={item.start}
+      end={item.end[lang]}
+      description={item.description[lang]}
+      logo={item.logo}
+      href={'href' in item ? item.href : undefined}
+      loading="eager"
+      fetchpriority="high"
+    />
+  ))}
+</section>
+
+<style>
+  section { padding-top: 3rem; }
+</style>

@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import { formatDate, notePath } from '../lib/i18n';
+import { noteSchema } from '../lib/schema';
+import BaseLayout from './BaseLayout.astro';
+interface Props {
+  note: CollectionEntry<'notes'>;
+  enPath: string;
+  frPath: string;
+  translationAvailable: boolean;
+  alternates: { lang: 'en' | 'fr' | 'x-default'; path: string }[];
+}
+const { note, enPath, frPath, translationAvailable, alternates } = Astro.props;
+const lang = note.data.lang;
+---
+<BaseLayout {lang} title={note.data.title} description={note.data.description} canonicalPath={notePath(note)} {alternates} {enPath} {frPath} {translationAvailable} schema={noteSchema(note)} ogType="article">
+  <article class="mx-auto max-w-[760px] px-5 pt-14 pb-20 sm:px-6 sm:pt-18 sm:pb-24">
+    <header class="mb-12 border-b border-border pb-9">
+      <Breadcrumbs
+        lang={lang}
+        items={[
+          { label: lang === 'fr' ? 'Accueil' : 'Home', href: lang === 'fr' ? '/fr/' : '/' },
+          { label: 'Notes', href: lang === 'fr' ? '/fr/notes/' : '/notes/' },
+          { label: note.data.title },
+        ]}
+      />
+      <h1 class="display mt-6 max-w-[43rem] text-[2rem] leading-[1.12] font-bold tracking-[-0.05em] sm:text-[2.65rem]">{note.data.title}</h1>
+      <p class="mt-5 max-w-[40rem] text-[1.05rem] text-muted">{note.data.description}</p>
+      <div class="meta mt-6 flex flex-wrap gap-x-4 gap-y-1 uppercase">
+        <time datetime={note.data.publishedAt.toISOString()}>{formatDate(note.data.publishedAt, lang)}</time><span>{lang}</span><span>{note.data.type}</span>
+        {note.data.tags.slice(0, 3).map((tag) => <span>{tag}</span>)}
+      </div>
+    </header>
+    <div class="prose"><slot /></div>
+  </article>
+</BaseLayout>

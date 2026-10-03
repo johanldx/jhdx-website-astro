@@ -1,0 +1,16 @@
+---
+import HomeContent from '../../components/home/HomeContent.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { homeSchema } from '../../lib/schema';
+---
+
+<BaseLayout
+  lang="fr"
+  canonicalPath="/fr/"
+  alternates={[
+    { lang: 'en', path: '/' }, { lang: 'fr', path: '/fr/' }, { lang: 'x-default', path: '/' },
+  ]}
+  schema={homeSchema('fr')}
+>
+  <HomeContent lang="fr" />
+</BaseLayout>

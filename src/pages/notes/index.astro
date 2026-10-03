@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import NotesIndex from '../../components/notes/NotesIndex.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { isPublished } from '../../lib/i18n';
+import { notesIndexSchema } from '../../lib/schema';
+const notes = (await getCollection('notes', isPublished))
+  .filter((note) => note.data.lang === 'en')
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+---
+<BaseLayout lang="en" title="Notes" description="Technical notes, development logs and experiments around software engineering, web architecture, infrastructure and open source." canonicalPath="/notes/" enPath="/notes/" frPath="/fr/notes/" alternates={[{ lang: 'en', path: '/notes/' }, { lang: 'fr', path: '/fr/notes/' }, { lang: 'x-default', path: '/notes/' }]} schema={notesIndexSchema('en', notes)}>
+  <NotesIndex lang="en" {notes} />
+</BaseLayout>

@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Lang } from '../../data/site';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import NoteItem from './NoteItem.astro';
+interface Props {
+  lang: Lang;
+  notes: CollectionEntry<'notes'>[];
+}
+const { lang, notes } = Astro.props;
+---
+<div class="mx-auto max-w-[960px] px-5 pt-14 pb-18 sm:px-7 sm:pt-20 sm:pb-24">
+  <header class="mb-12">
+    <div class="mb-4">
+      <Breadcrumbs
+        lang={lang}
+        items={[
+          { label: lang === 'fr' ? 'Accueil' : 'Home', href: lang === 'fr' ? '/fr/' : '/' },
+          { label: 'Notes' },
+        ]}
+      />
+    </div>
+    <h1 class="display m-0 text-[2.5rem] leading-none font-bold tracking-[-0.05em] sm:text-[3.25rem]">Notes</h1>
+    <p class="mt-5 max-w-[43rem] text-muted">{lang === 'fr' ? "Notes techniques, journaux de développement et expérimentations autour du développement logiciel, de l'architecture web, de l'infrastructure et de l'open source." : 'Technical notes, development logs and experiments around software engineering, web architecture, infrastructure and open source.'}</p>
+  </header>
+  <div class="notes-rule" aria-hidden="true"><span></span></div>
+  <div class="max-w-[760px] pt-10">
+    {notes.length > 0 ? notes.map((note) => <NoteItem {note} {lang} />) : <p class="text-muted">{lang === 'fr' ? 'Les premières notes et journaux de développement arrivent bientôt.' : 'Notes and development logs are coming soon.'}</p>}
+  </div>
+</div>
+
+<style>
+  .notes-rule { height: 1px; background: var(--border); }
+  .notes-rule span { display: block; width: 5rem; height: 2px; background: var(--accent); transform: translateY(-.5px); }
+</style>

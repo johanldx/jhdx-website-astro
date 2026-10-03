@@ -1,0 +1,18 @@
+---
+import { previousExperience } from '../../data/experience';
+import type { Lang } from '../../data/site';
+import ExperienceItem from './ExperienceItem.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<section class="section" aria-labelledby="previously-title">
+  <SectionHeader id="previously-title" title={lang === 'fr' ? 'Expérience précédente' : 'Previously'} />
+  {previousExperience.map((item) => (
+    <ExperienceItem company={item.company} logo={item.logo} start={item.start} end={item.end[lang]} description={item.description[lang]} secondaryDescription={item.secondaryDescription[lang]} />
+  ))}
+</section>

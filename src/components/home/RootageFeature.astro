@@ -1,0 +1,46 @@
+---
+import { currentExperience } from '../../data/experience';
+import type { Lang } from '../../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const rootage = currentExperience.find((item) => item.company === 'Rootage');
+if (!rootage || !('href' in rootage))
+  throw new Error('Rootage experience data is missing');
+const domain = new URL(rootage.href).hostname;
+---
+
+<section class="rootage-section" aria-labelledby="rootage-title">
+  <article class="rootage-card">
+    <div class="card-topline">
+      <p>{rootage.role[lang]}</p>
+      <p>{rootage.start}—{rootage.end[lang]}</p>
+    </div>
+    <div class="brand-lockup mt-6 flex items-center gap-4">
+      <img class="h-11 w-11 object-contain" src={rootage.logo} alt="" width="48" height="48" loading="lazy" decoding="async" />
+      <h2 id="rootage-title">{rootage.company}</h2>
+    </div>
+    <p class="description">{rootage.description[lang]}</p>
+    <a href={rootage.href}>{domain} <span aria-hidden="true">↗</span></a>
+  </article>
+</section>
+
+<style>
+  .rootage-section { padding-bottom: 4.75rem; }
+  .rootage-card { position: relative; overflow: hidden; border: 1px solid var(--accent-border); border-radius: .7rem; background: var(--accent-soft); padding: 2rem 2.1rem; transition: border-color 180ms, transform 180ms; }
+  .rootage-card::before { position: absolute; top: 0; right: 0; left: 0; height: 4px; background: var(--accent); content: ''; }
+  .rootage-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .card-topline { display: flex; justify-content: space-between; gap: 1rem; color: var(--accent-muted); font: 700 .7rem/1.5 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+  .card-topline p { margin: 0; }
+  .brand-lockup { display: flex; align-items: center; gap: .9rem; margin-top: 1.6rem; }
+  .brand-lockup img { width: 2.75rem; height: 2.75rem; border-radius: 4px; object-fit: contain; }
+  h2 { margin: 0; font-family: var(--font-display); font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 700; letter-spacing: -.05em; line-height: 1; }
+  .description { max-width: 42rem; margin: 1rem 0 0; color: color-mix(in srgb, var(--foreground) 82%, var(--muted)); font-size: 1rem; }
+  a { display: inline-block; margin-top: 1.7rem; color: var(--accent-muted); font-family: var(--font-mono); font-size: .78rem; font-weight: 700; text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+  a span { display: inline-block; transition: transform 160ms; }
+  a:hover span { transform: translate(1px, -1px); }
+  :global(html.dark) .brand-lockup img { background: #fff; }
+  @media (max-width: 639px) { .rootage-section { padding-bottom: 3.5rem; } .rootage-card { padding: 1.55rem; } .card-topline { align-items: flex-start; flex-direction: column; gap: .2rem; } }
+</style>

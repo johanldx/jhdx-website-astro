@@ -1,0 +1,30 @@
+---
+interface Props {
+  lang: 'en' | 'fr';
+  enPath: string;
+  frPath: string;
+  translationAvailable?: boolean;
+}
+
+const { lang, enPath, frPath, translationAvailable = true } = Astro.props;
+const href = lang === 'en' ? frPath : enPath;
+const title = translationAvailable
+  ? lang === 'en'
+    ? 'Lire en français'
+    : 'Read in English'
+  : lang === 'en'
+    ? 'Voir les notes en français'
+    : 'View notes in English';
+---
+
+<div class="language" aria-label={lang === 'en' ? 'Language: English' : 'Langue : français'}>
+  {lang === 'en' ? <><span aria-current="page">EN</span><i>/</i><a href={href} hreflang="fr" title={title}>FR</a></> : <><a href={href} hreflang="en" title={title}>EN</a><i>/</i><span aria-current="page">FR</span></>}
+</div>
+
+<style>
+  .language { display: flex; gap: .32rem; align-items: center; font-family: var(--font-mono); font-size: .69rem; font-weight: 650; }
+  .language span { color: var(--accent); }
+  .language a { color: var(--muted); text-decoration: none; }
+  .language a:hover { color: var(--accent); }
+  .language i { color: var(--border-strong); font-style: normal; }
+</style>

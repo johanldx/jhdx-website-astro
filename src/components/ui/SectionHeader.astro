@@ -1,0 +1,27 @@
+---
+interface Props {
+  title: string;
+  id: string;
+  href?: string;
+  linkLabel?: string;
+}
+const { title, id, href, linkLabel } = Astro.props;
+---
+
+<div class="section-header">
+  <div class="flex items-center justify-between gap-5">
+    <h2 {id} class="section-title">{title}</h2>
+    {href && linkLabel && <a class="section-link" {href}>{linkLabel} <span aria-hidden="true">→</span></a>}
+  </div>
+  <div class="rule" aria-hidden="true"><span></span></div>
+</div>
+
+<style>
+  .section-header { margin-bottom: 2.25rem; }
+  .section-link { color: var(--muted); font-family: var(--font-mono); font-size: .72rem; text-decoration: none; transition: color 160ms; }
+  .section-link:hover { color: var(--accent); }
+  .section-link span { display: inline-block; color: var(--accent); transition: transform 160ms; }
+  .section-link:hover span { transform: translateX(2px); }
+  .rule { height: 1px; margin-top: .75rem; background: var(--border); }
+  .rule span { display: block; width: 3.5rem; height: 2px; background: var(--accent); transform: translateY(-.5px); }
+</style>

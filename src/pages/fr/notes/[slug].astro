@@ -1,0 +1,37 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import NoteLayout from '../../../layouts/NoteLayout.astro';
+import {
+  findTranslation,
+  isPublished,
+  notePath,
+  noteSlug,
+} from '../../../lib/i18n';
+export async function getStaticPaths() {
+  const notes = await getCollection('notes', isPublished);
+  return notes
+    .filter((note) => note.data.lang === 'fr')
+    .map((note) => ({
+      params: { slug: noteSlug(note) },
+      props: { note, notes },
+    }));
+}
+interface Props {
+  note: CollectionEntry<'notes'>;
+  notes: CollectionEntry<'notes'>[];
+}
+const { note, notes } = Astro.props;
+const { Content } = await render(note);
+const translation = findTranslation(note, notes);
+const translationAvailable = Boolean(translation);
+const frPath = notePath(note);
+const enPath = translation ? notePath(translation) : '/notes/';
+const alternates = translation
+  ? [
+      { lang: 'en' as const, path: enPath },
+      { lang: 'fr' as const, path: frPath },
+      { lang: 'x-default' as const, path: enPath },
+    ]
+  : [{ lang: 'fr' as const, path: frPath }];
+---
+<NoteLayout {note} {enPath} {frPath} {translationAvailable} {alternates}><Content /></NoteLayout>

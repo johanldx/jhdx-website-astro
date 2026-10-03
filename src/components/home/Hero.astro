@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../../assets/johan-ledoux.png';
+import { profile } from '../../data/profile';
+import { socials } from '../../data/socials';
+import type { Lang } from '../../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<section class="pt-15 pb-10 sm:pt-22 sm:pb-12" aria-labelledby="hero-title">
+  <div class="grid items-start gap-8 sm:grid-cols-[120px_1fr] sm:gap-11">
+    <div class="portrait-frame">
+      <Image
+        src={portrait}
+        alt="Johan Ledoux"
+        width={240}
+        height={240}
+        widths={[96, 120, 240]}
+        sizes="(max-width: 639px) 96px, 120px"
+        format="webp"
+        loading="eager"
+        fetchpriority="high"
+        class="h-24 w-24 rounded-[14px] object-cover sm:h-[120px] sm:w-[120px]"
+      />
+    </div>
+    <div>
+      <h1 id="hero-title" class="display m-0 text-[2.05rem] leading-none font-bold tracking-[-0.045em] sm:text-[2.55rem]">{profile.name}</h1>
+      <p class="role mt-3">{profile.title[lang]}</p>
+      <p class="mt-6 max-w-[39rem] text-[1.12rem] leading-[1.68] tracking-[-0.015em] sm:text-[1.25rem]">{profile.hero[lang]}</p>
+      <div class="mt-7 flex gap-6 text-sm font-medium">
+        {socials.map((social) => <a class="text-link" href={social.href} rel="me">{social.label} <span aria-hidden="true">↗</span></a>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .portrait-frame { position: relative; width: fit-content; border: 1px solid var(--border-strong); border-radius: 15px; background: var(--surface); padding: 3px; transition: border-color 180ms, transform 180ms; }
+  .portrait-frame::after { position: absolute; right: -6px; bottom: 14px; width: 3px; height: 2.5rem; border-radius: 2px; background: var(--accent); content: ''; }
+  .portrait-frame:hover { border-color: var(--accent-border); transform: translateY(-1px); }
+  .role { display: flex; align-items: center; gap: .6rem; color: var(--muted); font: 600 .82rem/1.4 var(--font-mono); }
+  .role::before { width: 1.8rem; height: 2px; background: var(--accent); content: ''; }
+</style>

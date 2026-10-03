@@ -1,0 +1,25 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Lang } from '../../data/site';
+import NoteItem from '../notes/NoteItem.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+interface Props {
+  lang: Lang;
+  notes: CollectionEntry<'notes'>[];
+}
+const { lang, notes } = Astro.props;
+const indexPath = lang === 'fr' ? '/fr/notes/' : '/notes/';
+---
+
+<section class="section" aria-labelledby="notes-title">
+  <SectionHeader id="notes-title" title="Notes" href={notes.length > 0 ? indexPath : undefined} linkLabel={notes.length > 0 ? (lang === 'fr' ? 'Voir toutes les notes' : 'View all notes') : undefined} />
+  <p class="mb-9 max-w-[42rem] text-[.94rem] text-muted">
+    {lang === 'fr'
+      ? "Notes techniques, journaux de développement et expérimentations autour du développement logiciel, de l'architecture web, de l'infrastructure et de l'open source."
+      : 'Technical notes, development logs and experiments around software engineering, web architecture, infrastructure and open source.'}
+  </p>
+  {notes.length > 0 ? notes.map((note) => <NoteItem {note} {lang} />) : (
+    <p class="text-muted">{lang === 'fr' ? 'Les premières notes et journaux de développement arrivent bientôt.' : 'Notes and development logs are coming soon.'}</p>
+  )}
+</section>

@@ -1,0 +1,65 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+  lang?: 'en' | 'fr';
+}
+
+const { items, lang = 'en' } = Astro.props;
+---
+
+<nav aria-label={lang === 'fr' ? "Fil d'Ariane" : "Breadcrumbs"} class="breadcrumbs">
+  <ol class="flex flex-wrap items-center gap-1.5 list-none p-0 m-0">
+    {items.map((item, index) => {
+      const isLast = index === items.length - 1;
+      return (
+        <li class="flex items-center gap-1.5 min-w-0">
+          {index > 0 && <span class="separator" aria-hidden="true">/</span>}
+          {isLast || !item.href ? (
+            <span class="current truncate" aria-current={isLast ? 'page' : undefined}>
+              {item.label}
+            </span>
+          ) : (
+            <a href={item.href} class="link">
+              {item.label}
+            </a>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.55;
+    letter-spacing: 0.01em;
+  }
+  .link {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+  .link:hover {
+    color: var(--accent);
+  }
+  .separator {
+    color: var(--border-strong);
+    user-select: none;
+  }
+  .current {
+    color: var(--foreground);
+    max-width: 260px;
+  }
+  @media (min-width: 640px) {
+    .current {
+      max-width: 440px;
+    }
+  }
+</style>

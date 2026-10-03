@@ -1,0 +1,69 @@
+---
+title: "Pourquoi j'ai créé unschema-graph"
+description: "Pourquoi je voulais une manière plus simple et typée de construire des graphes Schema.org JSON-LD maintenables avec Astro."
+publishedAt: 2026-10-03
+lang: fr
+translationKey: why-i-built-unschema-graph
+type: devlog
+tags: [unschema-graph, json-ld, schema.org, astro, typescript]
+draft: false
+---
+
+Les données structurées paraissent simples lorsqu'un site n'a besoin que de quelques blocs JSON-LD indépendants.
+
+Ça devient beaucoup moins agréable à maintenir dès qu'une même personne, organisation, site ou produit doit être référencé sur plusieurs pages.
+
+C'est ce problème que j'ai voulu résoudre avec **[unschema-graph](https://unschema-graph.jhdx.dev/)**.
+
+## Passer de snippets à un graphe
+
+Beaucoup d'implémentations JSON-LD finissent par redéclarer les mêmes entités un peu partout :
+
+```json
+{
+  "@type": "Person",
+  "name": "Johan Ledoux"
+}
+```
+
+Cette même personne peut ensuite être redéfinie dans un article, un site, un projet ou une page de profil.
+
+Avec des identifiants stables, ces entités peuvent au contraire appartenir au même graphe :
+
+```txt
+https://jhdx.dev/#person
+https://jhdx.dev/#website
+https://jhdx.dev/#profile
+```
+
+Les différentes pages peuvent alors référencer les entités existantes au lieu de les recréer.
+
+Les relations comme `author`, `publisher` ou `creator` deviennent ainsi beaucoup plus explicites et prévisibles.
+
+## Pourquoi une nouvelle librairie ?
+
+Je voulais une API qui s'intègre naturellement dans un projet TypeScript et Astro.
+
+Les principaux objectifs étaient :
+
+- du **typage** pour les entités et propriétés Schema.org ;
+- des **entités réutilisables** plutôt que des objets JSON-LD dupliqués ;
+- des **identifiants stables** pour relier les données entre les pages ;
+- la **composition de graphes** plutôt que l'assemblage manuel de snippets ;
+- une intégration adaptée au **rendu statique d'Astro**.
+
+L'objectif n'est pas de cacher Schema.org.
+
+Il s'agit surtout de rendre son implémentation moins répétitive et plus simple à maintenir.
+
+## Construit à partir d'un vrai besoin
+
+`jhdx.dev` utilise lui-même `@unschema-graph/astro`.
+
+Le site relie notamment la personne, le site web, la page de profil, le projet open source et les articles dans un même modèle de données structurées.
+
+Ça permet également d'utiliser ce site comme cas réel pour tester et faire évoluer la librairie.
+
+**unschema-graph continue d'évoluer**, mais son principe reste simple : les données structurées deviennent beaucoup plus faciles à comprendre et à maintenir lorsqu'on les traite comme un graphe connecté plutôt que comme une collection de snippets indépendants.
+
+[Documentation ↗](https://unschema-graph.jhdx.dev/) · [GitHub ↗](https://github.com/johanldx/unschema-graph)

@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import { projects } from '../../data/projects';
+import type { Lang } from '../../data/site';
+import { getGitHubMetadata } from '../../lib/github';
+import { isPublished } from '../../lib/i18n';
+import { getNpmVersion } from '../../lib/npm';
+import Currently from './Currently.astro';
+import Hero from './Hero.astro';
+import NotesPreview from './NotesPreview.astro';
+import Previously from './Previously.astro';
+import ProjectFeature from './ProjectFeature.astro';
+import RootageFeature from './RootageFeature.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const project = projects[0];
+const [github, npmVersion, allNotes] = await Promise.all([
+  getGitHubMetadata(project.repository),
+  getNpmVersion(project.packageName),
+  getCollection('notes', isPublished),
+]);
+const metadata = {
+  stars: github.stars ?? project.fallback.stars,
+  version: npmVersion ?? project.fallback.version,
+  releaseDate: github.releaseDate ?? project.fallback.releaseDate,
+};
+const notes = allNotes
+  .filter((note) => note.data.lang === lang)
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())
+  .slice(0, 3);
+---
+
+<div class="mx-auto max-w-[960px] px-5 sm:px-7">
+  <Hero {lang} />
+  <Currently {lang} />
+  <RootageFeature {lang} />
+  <ProjectFeature {project} {lang} {metadata} />
+  <NotesPreview {lang} {notes} />
+  <Previously {lang} />
+</div>

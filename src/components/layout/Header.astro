@@ -1,0 +1,47 @@
+---
+import type { Lang } from '../../data/site';
+import LanguageSwitch from '../ui/LanguageSwitch.astro';
+import ThemeToggle from '../ui/ThemeToggle.astro';
+
+interface Props {
+  lang: Lang;
+  enPath?: string;
+  frPath?: string;
+  translationAvailable?: boolean;
+}
+
+const {
+  lang,
+  enPath = '/',
+  frPath = '/fr/',
+  translationAvailable = true,
+} = Astro.props;
+const home = lang === 'fr' ? '/fr/' : '/';
+const notes = lang === 'fr' ? '/fr/notes/' : '/notes/';
+---
+
+<header class="site-header">
+  <div class="mx-auto flex max-w-[960px] flex-wrap items-center justify-between gap-x-7 gap-y-3 px-5 py-4 sm:flex-nowrap sm:px-7 sm:py-5">
+    <a href={home} class="name">Johan Ledoux</a>
+    <nav aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'} class="order-3 flex w-full gap-x-5 font-mono text-[.72rem] sm:order-none sm:w-auto sm:gap-x-6">
+      <a href={`${home}#projects`}>{lang === 'fr' ? 'Projets' : 'Projects'}</a>
+      <a href={notes}>Notes</a>
+      <a href="https://github.com/johanldx" rel="me">GitHub <span aria-hidden="true">↗</span></a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <LanguageSwitch {lang} {enPath} {frPath} {translationAvailable} />
+      <ThemeToggle />
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header::after { display: block; width: calc(100% - 2.5rem); max-width: 904px; height: 1px; margin-inline: auto; background: var(--border); content: ''; }
+  .name { display: flex; align-items: center; gap: .65rem; font-family: var(--font-display); font-size: .94rem; font-weight: 650; letter-spacing: -.02em; text-decoration: none; }
+  .name span { display: grid; width: 1.8rem; height: 1.8rem; place-items: center; border: 1px solid var(--accent-border); border-radius: .35rem; color: var(--accent); font: 700 .65rem/1 var(--font-mono); }
+  nav a { position: relative; color: var(--muted); text-decoration: none; transition: color 160ms; }
+  nav a::after { position: absolute; right: 0; bottom: -.35rem; left: 0; height: 1px; background: var(--accent); content: ''; transform: scaleX(0); transform-origin: left; transition: transform 160ms; }
+  nav a:hover { color: var(--foreground); }
+  nav a:hover::after { transform: scaleX(1); }
+  @media (min-width: 640px) { .site-header::after { width: calc(100% - 3.5rem); } }
+</style>
